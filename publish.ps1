@@ -18,14 +18,14 @@ $notes = @"
 
 Tampilkan, kontrol, dan transfer file HP Android dari PC Windows lewat USB atau Wi-Fi.
 
-**Download:** ``AndroidMirror-Setup-$version.exe`` di bawah (Windows 10/11 64-bit, ±10 MB, tanpa hak admin).
+**Download:** ``AndroidMirror-Setup-$version.exe`` di bawah (Windows 10/11 64-bit, sekitar 10 MB, tanpa hak admin).
 
 - Mirror real-time sampai 120 fps, kontrol mouse & keyboard, audio ke PC (Android 11+)
 - USB atau Wi-Fi (1 klik dari USB)
 - Transfer file dua arah: jelajahi HP, ambil ke PC, kirim ke HP (drag & drop), buat folder, ganti nama, hapus
 - Layar HP mati saat mirror, selalu di atas, layar penuh, drag & drop APK
 
-Cara pakai lengkap ada di README. Kalau muncul "Windows protected your PC", klik **More info → Run anyway**.
+Cara pakai lengkap ada di README. Kalau muncul "Windows protected your PC", klik **More info -> Run anyway**.
 
 Dibangun di atas [scrcpy](https://github.com/Genymobile/scrcpy) (Apache-2.0), sudah termasuk di installer.
 "@
