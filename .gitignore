@@ -3,3 +3,4 @@ promo/out/
 promo/tools/node_modules/
 promo/tools/package-lock.json
 *.log
+promo/vo/

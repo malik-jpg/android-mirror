@@ -63,6 +63,7 @@ if (snapMode) {
 }
 
 const DURATION = await page.evaluate(() => window.OPENER.DURATION);
+const VO = await page.evaluate(() => window.OPENER.VO || []);
 const total = Math.ceil(DURATION * FPS);
 const frames = path.join(out, 'frames');
 await rm(frames, { recursive: true, force: true });
@@ -79,10 +80,30 @@ for (let i = 0; i < total; i++) {
 await browser.close();
 
 const mp4 = path.join(out, 'android-mirror-promo.mp4');
-console.log('\nMenggabungkan jadi MP4...');
-const ff = spawnSync('ffmpeg', ['-y', '-framerate', String(FPS), '-i', path.join(frames, 'f%05d.png'),
-  '-c:v', 'libx264', '-preset', 'slow', '-crf', '16', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', mp4],
+const silent = path.join(out, '_video-only.mp4');
+console.log('\nMenggabungkan frame jadi video...');
+const ff = spawnSync('ffmpeg', ['-y', '-v', 'error', '-framerate', String(FPS), '-i', path.join(frames, 'f%05d.png'),
+  '-c:v', 'libx264', '-preset', 'slow', '-crf', '16', '-pix_fmt', 'yuv420p', VO.length ? silent : mp4],
   { stdio: 'inherit' });
 if (ff.status !== 0) { console.error('ffmpeg gagal / tidak ada. Instal: winget install Gyan.FFmpeg'); process.exit(1); }
+
+if (VO.length) {
+  // VO: tiap klip ditaruh di detik mulainya (adelay), dicampur, lalu diratakan ke -14 LUFS (standar sosmed)
+  console.log(`Memasang ${VO.length} klip VO...`);
+  const inputs = ['-i', silent];
+  const chains = [];
+  VO.forEach((v, i) => {
+    inputs.push('-i', path.join(root, v.src));
+    const ms = Math.round(v.at * 1000);
+    chains.push(`[${i + 1}:a]aresample=48000,aformat=channel_layouts=stereo,adelay=${ms}|${ms}[v${i}]`);
+  });
+  const mix = `${chains.join(';')};${VO.map((_, i) => `[v${i}]`).join('')}amix=inputs=${VO.length}:normalize=0:duration=longest,` +
+              `apad,atrim=0:${DURATION},loudnorm=I=-14:TP=-1.5:LRA=11[a]`;
+  const mux = spawnSync('ffmpeg', ['-y', '-v', 'error', ...inputs, '-filter_complex', mix,
+    '-map', '0:v', '-map', '[a]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000',
+    '-movflags', '+faststart', '-t', String(DURATION), mp4], { stdio: 'inherit' });
+  if (mux.status !== 0) { console.error('Gagal memasang VO'); process.exit(1); }
+  await rm(silent, { force: true });
+}
 await rm(frames, { recursive: true, force: true });
 console.log(`\nSELESAI -> ${mp4}`);

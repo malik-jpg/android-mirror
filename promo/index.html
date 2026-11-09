@@ -317,7 +317,7 @@ function render(t){
 
 /* ============ TIMELINE ============ */
 const Q=new URLSearchParams(location.search);
-const DURATION=30;
+const DURATION=30.6;
 const tl=gsap.timeline({paused:true});
 const cam=(at,x,y,s,dur=1,ease='power3.inOut')=>tl.to(C,{x,y,s,duration:dur,ease},at);
 const sweepTo=(at,x,y,dur=2.2)=>tl.to('#sweep',{x,y,duration:dur,ease:'sine.inOut'},at);
@@ -491,14 +491,29 @@ sweepTo(25.2,540,820,1.6);
 show('title',27.0); inMask(T.title.ch,T.title.el,27.05,{dur:.8});
 tl.fromTo('#sub',{opacity:0,y:30},{opacity:1,y:0,duration:.6,ease:'power3.out',immediateRender:false},27.6);
 tl.fromTo('#icon',{rotation:0},{rotation:4,duration:3,ease:'sine.inOut',immediateRender:false},27);
-tl.to({},{duration:.01},DURATION);
+tl.to({},{duration:.01},30);
+/* VO babak 3 butuh 4,6 dtk: semua yang mulai setelah 11.55 digeser +0,6 dtk */
+tl.shiftChildren(.6,false,11.55);
+
+/* ============ VO (VoiceStudio · profil jrock) — waktu mulai tiap klip ============ */
+const VO=[
+  {src:'vo/vo1.wav',at:.35},  {src:'vo/vo2.wav',at:3.55}, {src:'vo/vo3.wav',at:7.35},
+  {src:'vo/vo4.wav',at:12.85},{src:'vo/vo5.wav',at:18.75},{src:'vo/vo6.wav',at:22.95},
+  {src:'vo/vo7.wav',at:27.6}];
+VO.forEach(v=>{v.el=new Audio(v.src);v.el.preload='auto';});
+let audioOK=true;
+function syncVO(t,playing){for(const v of VO){const a=v.el,lt=t-v.at,dur=isFinite(a.duration)?a.duration:99;
+  const on=playing&&lt>=0&&lt<dur;
+  if(!on){if(!a.paused)a.pause();continue;}
+  if(Math.abs(a.currentTime-lt)>.15)a.currentTime=lt;
+  if(a.paused)a.play().catch(()=>{audioOK=false;});}}
 
 /* ============ PEREKAT ============ */
 const stage=$('#stage');
 const fit=()=>{const s=Math.min(innerWidth/W,innerHeight/H);stage.style.transform=`translate(-50%,-50%) scale(${s})`;};
 addEventListener('resize',fit); fit();
 const clock=$('#clock'),scrub=$('#scrub'),btn=$('#btn-play'); let scrubbing=false;
-(function frame(){const t=tl.time();render(t);clock.textContent=t.toFixed(2)+'s';
+(function frame(){const t=tl.time();render(t);syncVO(t,!tl.paused()&&!Q.has('clean'));clock.textContent=t.toFixed(2)+'s';
   if(!scrubbing)scrub.value=String(t/DURATION*1000);requestAnimationFrame(frame);})();
 const toggle=()=>{if(tl.paused()||tl.progress()>=1){if(tl.progress()>=1)tl.progress(0);tl.play();btn.textContent='Pause';}
   else{tl.pause();btn.textContent='Play';}};
@@ -513,9 +528,14 @@ addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();toggle();
 if(Q.has('debug'))$('#ui').classList.add('on');
 tl.eventCallback('onComplete',()=>{tl.play(0);});
 const seek=t=>{tl.pause();tl.time(t,false);if(gsap.ticker.tick)gsap.ticker.tick();render(t);};
-window.OPENER={tl,DURATION,seek,W,H,ready:false};
+window.OPENER={tl,DURATION,seek,W,H,ready:false,VO:VO.map(v=>({src:v.src,at:v.at}))};
+/* ada suara: coba autoplay; bila browser memblokir, tahan di frame 0 dan mulai bersama suara pada klik/tombol pertama */
+const start=()=>{audioOK=true;tl.play(0);};
 Promise.all([document.fonts.ready,...[...document.images].map(i=>i.complete?1:new Promise(r=>{i.onload=i.onerror=r;}))])
-  .then(()=>{window.OPENER.ready=true;tl.time(0);render(0);if(!Q.has('clean'))tl.play(0);});
+  .then(()=>{window.OPENER.ready=true;tl.time(0);render(0);if(Q.has('clean'))return;
+    VO[0].el.play().then(()=>{VO[0].el.pause();VO[0].el.currentTime=0;start();})
+      .catch(()=>{const go=()=>{removeEventListener('pointerdown',go);removeEventListener('keydown',go);start();};
+        addEventListener('pointerdown',go);addEventListener('keydown',go);});});
 </script>
 </body>
 </html>
