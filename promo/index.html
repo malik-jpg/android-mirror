@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="id">
+<!-- Made with the Bang Motion skill by Bang Tutorial (https://youtube.com/bangtutorial) - MIT -->
+<head>
+<meta charset="utf-8">
+<title>Android Mirror Promo</title>
+<!--
+  STYLE BRIEF (lihat STYLE-BRIEF.md)
+  Produk + rasa        : Android Mirror — praktis, mulus, berkelas
+  Konsep               : estafet benda (dipilih) / sebelum-sesudah / satu shot kontinu
+  Sidik jari           : estafet benda · 7 babak · foto pahlawan · jepretan kamera HP · dua jalur emas jadi logo X
+  Palet (logo MalixNet): navy #1E324C (latar) · emas #D4A84B (utama) · krem #F4EEE0 (latar terang) · merah #C8261F (aksen)
+  Font                 : Fraunces (display) + DM Sans; UI = screenshot asli (Segoe UI)
+  Penekanan            : tanpa sorotan bentuk — satu kata kunci berwarna emas
+  Latar                : navy bergradien + butiran hidup; krem saat folder PC mekar
+  Tanda tangan gerak   : jalur emas yang menggambar dirinya
+  Gerak latar          : sapuan cahaya emas sekali per segmen + butiran hidup (menu 5 + 4)
+  Gaya objek           : flat dengan kilau tipis
+  Momen istimewa       : dua jalur emas bersilang jadi X → ikon aplikasi
+  Pakai: buka langsung (klik dua kali). ?debug=1 = panel scrub. ?clean=1 = tanpa autoplay (export).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=DM+Sans:opsz,wght@9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+:root{
+  --navy:#1E324C; --navy-d:#111D2E; --navy-l:#2C4A70;
+  --gold:#D4A84B; --gold-l:#ECC86E; --gold-d:#A9802F;
+  --cream:#F4EEE0; --cream-d:#E6DBC2; --red:#C8261F; --green:#3DDC84;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:"DM Sans",system-ui,sans-serif;color:var(--cream)}
+#filters{position:fixed;width:0;height:0;opacity:0;pointer-events:none}
+#stage{position:fixed;left:50%;top:50%;width:1080px;height:1920px;transform:translate(-50%,-50%);overflow:hidden;
+  background:radial-gradient(80% 55% at 50% 38%,var(--navy-l) 0%,var(--navy) 48%,var(--navy-d) 100%)}
+.abs{position:absolute;left:0;top:0}
+
+/* latar: sapuan cahaya + butiran */
+#sweep{position:absolute;left:0;top:0;width:1400px;height:1400px;margin:-700px 0 0 -700px;border-radius:50%;
+  background:radial-gradient(circle,rgba(236,200,110,.30) 0%,rgba(212,168,75,.12) 35%,transparent 68%);filter:blur(30px);pointer-events:none}
+#ring-bg{position:absolute;left:540px;top:960px;width:1700px;height:1700px;margin:-850px 0 0 -850px;border-radius:50%;
+  border:2px solid rgba(212,168,75,.10);box-shadow:inset 0 0 0 70px rgba(212,168,75,.035);pointer-events:none}
+#grain{position:absolute;inset:-200px;pointer-events:none;opacity:.10;mix-blend-mode:overlay;z-index:30;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.2 -.1'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.vignette{position:absolute;inset:0;pointer-events:none;z-index:29;
+  background:radial-gradient(ellipse 90% 70% at 50% 48%,transparent 55%,rgba(5,10,20,.55) 100%)}
+
+/* dunia + kamera */
+#world{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;will-change:transform}
+
+/* monitor */
+#monitor{position:absolute;left:90px;top:420px;width:900px;height:560px;border-radius:24px;
+  background:linear-gradient(160deg,#22324A,#0D1626 60%);box-shadow:0 40px 80px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.08)}
+#screen{position:absolute;left:18px;top:18px;width:864px;height:524px;border-radius:10px;overflow:hidden;
+  background:radial-gradient(90% 90% at 70% 20%,#30507A 0%,#1A2C46 55%,#122036 100%)}
+#screen::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,.07),transparent 40%);pointer-events:none}
+#neck{position:absolute;left:500px;top:978px;width:80px;height:58px;background:linear-gradient(90deg,#1A2638,#2A3B55,#1A2638)}
+#base{position:absolute;left:370px;top:1032px;width:340px;height:18px;border-radius:9px;background:linear-gradient(180deg,#2E405C,#152033)}
+
+/* jendela di dalam layar PC */
+.win{position:absolute;border-radius:10px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.win img{display:block;width:100%;height:100%}
+#w-main{left:40px;top:16px;width:424px;height:493px;transform-origin:0 0}
+#w-mirror{left:520px;top:14px;width:300px;height:496px;background:#0E1522;transform-origin:50% 50%}
+#w-mirror .bar{height:30px;background:#F3F3F3;display:flex;align-items:center;gap:8px;padding:0 10px;font:600 13px "Segoe UI",sans-serif;color:#222}
+#w-mirror .bar i{width:14px;height:14px;border-radius:50%;background:radial-gradient(circle,#F4EEE0 52%,#1E324C 54% 70%,#D4A84B 72%)}
+#w-mirror .vp{position:absolute;left:41px;top:30px;width:276px;height:586px;transform:scale(.79);transform-origin:0 0;overflow:hidden;border-radius:6px}
+#w-file{left:64px;top:2px;width:736px;height:520px;transform-origin:30% 70%}
+#sel{position:absolute;left:7px;top:173px;width:722px;height:18px;background:rgba(0,120,215,.45);border-radius:2px;opacity:0}
+#folder-bg{position:absolute;left:140px;top:458px;width:420px;height:494px;border-radius:12px;
+  background:radial-gradient(70% 60% at 50% 30%,#FBF7EE 0%,var(--cream) 50%,var(--cream-d) 100%);box-shadow:0 18px 40px rgba(0,0,0,.4)}
+#folder{position:absolute;left:150px;top:470px;width:400px;height:470px;transform-origin:50% 50%}
+#folder .hd{height:60px;display:flex;align-items:center;gap:12px;padding:0 20px;font:600 22px "DM Sans",sans-serif;color:var(--navy)}
+#folder .hd b{width:30px;height:24px;border-radius:4px;background:linear-gradient(180deg,#F2C55C,#D9A23A);position:relative}
+#folder .hd b::before{content:"";position:absolute;left:0;top:-5px;width:13px;height:7px;border-radius:3px 3px 0 0;background:#F2C55C}
+.slot{position:absolute;width:110px;height:110px;border-radius:12px;overflow:hidden;box-shadow:0 4px 10px rgba(30,50,76,.18)}
+
+/* HP */
+#phone{position:absolute;left:610px;top:1085px;width:300px;height:610px;border-radius:46px;
+  background:linear-gradient(150deg,#2B3D58,#0B1320 55%,#1A2840);box-shadow:0 40px 70px rgba(0,0,0,.5),inset 0 0 0 2px rgba(255,255,255,.07)}
+#pscreen{position:absolute;left:12px;top:12px;width:276px;height:586px;border-radius:36px;overflow:hidden;background:#0E1522}
+#pscreen .hole{position:absolute;left:131px;top:12px;width:14px;height:14px;border-radius:50%;background:#000;z-index:9}
+
+/* UI HP (dipakai di HP & jendela mirror) */
+.pui{position:absolute;inset:0;background:#F6F2E8;color:var(--navy);font-family:"DM Sans",sans-serif}
+.pui .st{height:40px;display:flex;justify-content:space-between;align-items:center;padding:6px 22px 0;font:700 13px "DM Sans";color:var(--navy);position:relative;z-index:2;background:#F6F2E8}
+.pui .hd{padding:4px 18px 10px;font:700 24px "Fraunces",serif;position:relative;z-index:2;background:#F6F2E8}
+.pui .feed{position:absolute;left:0;top:84px;width:100%}
+.pui .card{margin:0 14px 14px;border-radius:16px;background:#fff;box-shadow:0 3px 10px rgba(30,50,76,.12);overflow:hidden}
+.pui .card .ph{height:150px}
+.pui .card .ln{height:9px;border-radius:5px;background:#D9D2C2;margin:10px 14px 0}
+.pui .card .ln.s{width:46%;margin-bottom:14px}
+.pui .rip{position:absolute;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;background:rgba(212,168,75,.55);opacity:0}
+
+/* kamera HP (babak 1) */
+#cam{position:absolute;inset:0;background:#000;z-index:3}
+#cam .vf{position:absolute;left:0;top:50px;width:276px;height:420px;overflow:hidden}
+#cam .vf>div{position:absolute;left:-30px;top:-20px;width:336px;height:460px}
+#cam .bar2{position:absolute;left:0;bottom:0;width:100%;height:116px;background:#0A0E16}
+#shutter{position:absolute;left:108px;top:494px;width:60px;height:60px;border-radius:50%;border:5px solid #fff;background:rgba(255,255,255,.18)}
+#shutter i{position:absolute;inset:5px;border-radius:50%;background:#fff}
+#thumb{position:absolute;left:28px;top:502px;width:44px;height:44px;border-radius:10px;overflow:hidden;border:2px solid #fff;opacity:0}
+#snap{position:absolute;left:0;top:50px;width:276px;height:420px;overflow:hidden;transform-origin:50px 474px}
+#flash{position:absolute;inset:0;background:#fff;opacity:0}
+#toast{position:absolute;left:18px;top:46px;width:240px;height:54px;border-radius:16px;background:var(--navy);color:var(--cream);
+  display:flex;align-items:center;gap:10px;padding:0 12px;font:600 15px "DM Sans";opacity:0;z-index:5;box-shadow:0 8px 20px rgba(0,0,0,.3)}
+#toast b{width:26px;height:32px;border-radius:4px;background:var(--red);flex:none}
+
+/* benda pahlawan & dokumen */
+#hero{position:absolute;left:0;top:0;width:160px;height:160px;margin:-80px 0 0 -80px;border-radius:16px;overflow:hidden;
+  box-shadow:0 14px 30px rgba(0,0,0,.45),0 0 0 4px #fff;opacity:0}
+.doc{position:relative;width:100%;height:100%;border-radius:12px;background:#fff;overflow:hidden}
+.doc::before{content:"";position:absolute;right:0;top:0;width:30%;height:30%;background:linear-gradient(225deg,var(--cream) 50%,#E5D9BE 50%)}
+.doc b{position:absolute;left:12%;bottom:14%;padding:3px 8px;border-radius:6px;background:var(--red);color:#fff;font:700 18px "DM Sans"}
+.doc i{position:absolute;left:12%;height:7%;border-radius:4px;background:#E2DACA}
+#doc{position:absolute;left:0;top:0;width:110px;height:110px;margin:-55px 0 0 -55px;opacity:0;filter:drop-shadow(0 14px 22px rgba(0,0,0,.35))}
+
+/* kabel, kursor, gelombang */
+#cable{position:absolute;left:0;top:0;width:1080px;height:2200px;overflow:visible;pointer-events:none}
+#cursor{position:absolute;left:0;top:0;width:58px;height:58px;opacity:0;z-index:20;filter:drop-shadow(0 6px 10px rgba(0,0,0,.45))}
+#click{position:absolute;left:0;top:0;width:70px;height:70px;margin:-35px 0 0 -35px;border-radius:50%;border:4px solid var(--gold-l);opacity:0;z-index:19}
+#fx{position:absolute;left:0;top:0;width:1080px;height:2200px;overflow:visible;pointer-events:none}
+
+/* teks: di luar rig kamera (ukuran tetap) */
+.line{position:absolute;left:0;width:1080px;text-align:center;font-family:"Fraunces",serif;font-weight:500;
+  font-size:104px;letter-spacing:-.015em;color:var(--cream);white-space:nowrap;opacity:0;z-index:25;
+  text-shadow:0 4px 24px rgba(8,14,26,.45)}
+.line .k{color:var(--gold-l)}
+.line.ink{color:var(--navy);text-shadow:none}
+.line.ink .k{color:var(--gold-d)}
+.wd{display:inline-block;white-space:nowrap}
+.ch{display:inline-block;opacity:0;will-change:transform,opacity}
+#title{top:1150px;font-size:122px;font-weight:600}
+#sub{position:absolute;left:0;top:1320px;width:1080px;text-align:center;font:600 52px "DM Sans",sans-serif;
+  color:var(--gold-l);letter-spacing:.01em;opacity:0;z-index:25}
+
+#ui{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:none;align-items:center;gap:14px;padding:11px 18px;
+  border-radius:16px;background:rgba(14,16,22,.9);border:1px solid rgba(255,255,255,.1);font-size:13px;color:#A0A6B4;z-index:50}
+#ui.on{display:flex}
+#ui button{background:#262A34;color:#fff;border:none;padding:8px 16px;border-radius:9px;font:inherit;cursor:pointer}
+#scrub{width:340px;accent-color:var(--gold)}
+#clock{font-variant-numeric:tabular-nums;min-width:5.2ch;text-align:right}
+</style>
+</head>
+<body>
+<svg id="filters"><defs></defs></svg>
+
+<div id="stage">
+  <div id="sweep"></div>
+  <div id="ring-bg"></div>
+
+  <div id="world">
+    <!-- kabel di belakang HP -->
+    <svg id="cable" viewBox="0 0 1080 2200">
+      <g id="plug">
+        <path d="M760 1700 C760 1820 700 1900 720 2200" stroke="#0B1320" stroke-width="16" fill="none" stroke-linecap="round"/>
+        <path d="M760 1700 C760 1820 700 1900 720 2200" stroke="#2A3B55" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <rect x="741" y="1688" width="38" height="34" rx="6" fill="#1A2638"/>
+        <rect x="751" y="1680" width="18" height="12" rx="3" fill="#8592A6"/>
+      </g>
+    </svg>
+
+    <div id="monitor">
+      <div id="screen">
+        <div class="win" id="w-main"><img src="assets/main.png" alt=""></div>
+        <div class="win" id="w-mirror"><div class="bar"><i></i>Android Mirror - Xiaomi 15T</div><div class="vp" id="mvp"></div></div>
+        <div class="win" id="w-file"><img src="assets/file-transfer.png" alt=""><div id="sel"></div></div>
+      </div>
+    </div>
+    <div id="neck"></div><div id="base"></div>
+
+    <div id="phone"><div id="pscreen">
+      <div id="pvp" class="abs" style="width:276px;height:586px"></div>
+      <div id="cam">
+        <div class="vf" id="vf"></div>
+        <div class="bar2"></div>
+        <div id="shutter"><i></i></div>
+        <div id="thumb"></div>
+        <div id="snap"></div>
+        <div id="flash"></div>
+      </div>
+      <div id="toast"><b></b>tugas.pdf diterima</div>
+      <div class="hole"></div>
+    </div></div>
+
+    <!-- folder PC di atas HP: saat mekar ia menutup seluruh frame -->
+    <div id="folder-bg"></div>
+    <div id="folder"><div class="hd"><b></b>Android Mirror</div></div>
+
+    <!-- jalur emas + ikon (lapisan atas dunia) -->
+    <svg id="fx" viewBox="0 0 1080 2200">
+      <defs>
+        <linearGradient id="gold" gradientUnits="userSpaceOnUse" x1="200" y1="700" x2="900" y2="1300">
+          <stop offset="0" stop-color="#F1CF7A"/><stop offset=".55" stop-color="#D4A84B"/><stop offset="1" stop-color="#A9802F"/>
+        </linearGradient>
+        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="xclip"><circle id="xcircle" cx="540" cy="1150" r="1400"/></clipPath>
+      </defs>
+      <g id="icon" style="transform-origin:540px 1150px">
+        <circle cx="540" cy="1150" r="294" fill="url(#gold)"/>
+        <circle cx="540" cy="1150" r="249" fill="#1E324C"/>
+        <circle cx="540" cy="1150" r="213" fill="#F4EEE0"/>
+      </g>
+      <g clip-path="url(#xclip)">
+        <path id="pA" d="M690 1085 C520 1060 300 980 320 820" stroke="url(#gold)" stroke-width="10" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+        <path id="pB" d="M380 820 C560 760 860 900 830 1085" stroke="url(#gold)" stroke-width="10" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+      </g>
+      <circle id="dot" r="14" fill="#F6DA8E" filter="url(#glow)" opacity="0"/>
+      <g id="waves" stroke="#ECC86E" stroke-width="8" fill="none" stroke-linecap="round" opacity="0">
+        <path d="M300 1004 h14 l22 -18 v64 l-22 -18 h-14z" fill="#ECC86E" stroke="none"/>
+        <path class="wv" d="M282 994 Q268 1018 282 1042"/><path class="wv" d="M262 980 Q240 1018 262 1056"/><path class="wv" d="M242 966 Q212 1018 242 1070"/>
+      </g>
+      <g id="wifi" stroke="#ECC86E" stroke-width="16" fill="none" stroke-linecap="round" opacity="0">
+        <path class="wf" d="M720 1330 Q760 1300 800 1330"/><path class="wf" d="M680 1295 Q760 1240 840 1295"/>
+        <path class="wf" d="M640 1260 Q760 1180 880 1260"/><circle cx="760" cy="1370" r="12" fill="#ECC86E" stroke="none"/>
+      </g>
+    </svg>
+
+    <div id="hero"></div>
+    <div id="doc"><div class="doc"><i style="top:20%;width:46%"></i><i style="top:34%;width:70%"></i><i style="top:48%;width:60%"></i><b>PDF</b></div></div>
+    <div id="click"></div>
+    <svg id="cursor" viewBox="0 0 24 24"><path d="M4 2 L4 20 L9 15.5 L12.5 22.5 L15.5 21 L12 14 L19 14 Z" fill="#fff" stroke="#111" stroke-width="1.4" stroke-linejoin="round"/></svg>
+  </div>
+
+  <h1 class="line" id="t1" style="top:200px">Fotonya di <span class="k">HP</span></h1>
+  <h1 class="line" id="t2" style="top:200px">Layarnya di <span class="k">PC</span></h1>
+  <h1 class="line" id="t3" style="top:200px">Kontrol pakai <span class="k">mouse</span></h1>
+  <h1 class="line ink" id="t4" style="top:200px">Ambil ke <span class="k">PC</span></h1>
+  <h1 class="line" id="t5" style="top:200px">Kirim ke <span class="k">HP</span></h1>
+  <h1 class="line" id="t6" style="top:200px;font-size:92px">Tanpa <span class="k">kabel</span> juga bisa</h1>
+  <h1 class="line" id="title">Android Mirror</h1>
+  <div id="sub">gratis · link di bio</div>
+
+  <div class="vignette"></div>
+  <div id="grain"></div>
+</div>
+
+<div id="ui">
+  <button id="btn-play">Pause</button><button id="btn-restart">Restart</button>
+  <input id="scrub" type="range" min="0" max="1000" value="0">
+  <span id="clock">0.00s</span>
+</div>
+
+<script>
+/* ============ UTIL ============ */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const W=1080,H=1920;
+
+/* foto pahlawan: senja pegunungan dari palet logo (SVG, bukan foto) */
+const PHOTO=`<svg viewBox="0 0 160 160" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block">
+ <defs><linearGradient id="SKY" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4EEE0"/><stop offset=".45" stop-color="#ECC86E"/><stop offset="1" stop-color="#D9774A"/></linearGradient></defs>
+ <rect width="160" height="160" fill="url(#SKY)"/><circle cx="104" cy="70" r="20" fill="#FFF6DD"/>
+ <path d="M0 112 L34 78 L58 98 L88 64 L126 104 L160 84 L160 160 L0 160Z" fill="#2C4A70"/>
+ <path d="M0 132 L40 104 L74 126 L112 98 L160 130 L160 160 L0 160Z" fill="#1E324C"/>
+ <path d="M0 146 L52 132 L100 144 L160 136 L160 160 L0 160Z" fill="#111D2E"/></svg>`;
+
+/* UI HP — dibuat dua kali (HP fisik + jendela mirror) supaya selalu sinkron */
+function buildPhoneUI(host){
+  const ui=document.createElement('div'); ui.className='pui';
+  ui.innerHTML=`<div class="st"><span>09.41</span><span>▮▮▮ ◔</span></div><div class="hd">Galeri</div>
+   <div class="feed">
+     <div class="card"><div class="ph">${PHOTO}</div><div class="ln"></div><div class="ln s"></div></div>
+     <div class="card"><div class="ph" style="background:linear-gradient(135deg,#1E324C,#2C4A70)"></div><div class="ln"></div><div class="ln s"></div></div>
+     <div class="card"><div class="ph" style="background:linear-gradient(135deg,#ECC86E,#D4A84B)"></div><div class="ln"></div><div class="ln s"></div></div>
+     <div class="card"><div class="ph" style="background:linear-gradient(135deg,#C8261F,#E07A4F)"></div><div class="ln"></div><div class="ln s"></div></div>
+     <div class="card"><div class="ph" style="background:linear-gradient(135deg,#F4EEE0,#E6DBC2)"></div><div class="ln"></div><div class="ln s"></div></div>
+   </div><div class="rip"></div>`;
+  host.appendChild(ui); return ui;
+}
+const uiPhone=buildPhoneUI($('#pvp')), uiMirror=buildPhoneUI($('#mvp'));
+const feeds=[$('.feed',uiPhone),$('.feed',uiMirror)], rips=[$('.rip',uiPhone),$('.rip',uiMirror)];
+$('#vf').innerHTML=`<div>${PHOTO}</div>`;
+$('#snap').innerHTML=`<div style="position:absolute;left:-30px;top:-20px;width:336px;height:460px">${PHOTO}</div>`;
+$('#thumb').innerHTML=PHOTO; $('#hero').innerHTML=PHOTO;
+
+/* folder PC: grid 3x3 */
+const SLOT=i=>({x:21+(i%3)*124, y:80+Math.floor(i/3)*124});
+const slotFill=['photo','#2C4A70','#ECC86E','#E07A4F','doc','#1E324C','#D4A84B','#E6DBC2','#C8261F'];
+const slots=slotFill.map((f,i)=>{const s=document.createElement('div');s.className='slot';const p=SLOT(i);
+  s.style.left=p.x+'px';s.style.top=p.y+'px';
+  if(f==='photo')s.innerHTML=PHOTO; else if(f==='doc')s.innerHTML=$('#doc').innerHTML; else s.style.background=`linear-gradient(135deg,${f},color-mix(in srgb,${f} 70%,#000))`;
+  $('#folder').appendChild(s);return s;});
+
+/* motion blur berarah */
+const defs=$('#filters defs'); let fc=0;
+function makeBlur(){const id='mb'+(fc++),NS='http://www.w3.org/2000/svg';
+  const f=document.createElementNS(NS,'filter');f.id=id;f.setAttribute('x','-70%');f.setAttribute('y','-70%');
+  f.setAttribute('width','240%');f.setAttribute('height','240%');
+  const g=document.createElementNS(NS,'feGaussianBlur');g.setAttribute('stdDeviation','0 0');f.appendChild(g);defs.appendChild(f);
+  return {url:`url(#${id})`,node:g};}
+function blurTween(tl,targets,at,from,to,dur,{ease='power3.out',ax=1,ay=.08}={}){
+  const b=makeBlur(),o={v:from};tl.set(targets,{filter:b.url},at);
+  tl.to(o,{v:to,duration:dur,ease,onUpdate(){b.node.setAttribute('stdDeviation',`${(o.v*ax).toFixed(2)} ${(o.v*ay).toFixed(2)}`);}},at);
+  tl.set(targets,{filter:'none'},at+dur);}
+const VERT={ax:.1,ay:1};
+/* split per huruf, mempertahankan kata kunci (.k) */
+function splitChars(el){const out=[];const nodes=[...el.childNodes];el.textContent='';
+  let wd=null;const newWord=()=>{wd=document.createElement('span');wd.className='wd';el.appendChild(wd);};
+  for(const n of nodes){const isK=n.nodeType===1&&n.classList.contains('k');
+    for(const c of n.textContent){
+      if(c===' '){const sp=document.createElement('span');sp.className='ch';sp.innerHTML='&nbsp;';el.appendChild(sp);out.push(sp);wd=null;continue;}
+      if(!wd)newWord();const s=document.createElement('span');s.className='ch'+(isK?' k':'');s.textContent=c;wd.appendChild(s);out.push(s);}}
+  return out;}
+
+/* ============ KAMERA (proxy, ditulis di render) ============ */
+const C={x:760,y:1390,s:2.5};
+const rig=$('#world'), grain=$('#grain');
+const pA=$('#pA'), pB=$('#pB');
+const LA=pA.getTotalLength(), LB=pB.getTotalLength();
+function render(t){
+  rig.style.transform=`translate(${W/2-C.x*C.s}px,${H/2-C.y*C.s}px) scale(${C.s})`;
+  const f=Math.floor(t*12);  // butiran hidup: offset dari t, bukan random
+  grain.style.transform=`translate(${(f*37)%160-80}px,${(f*53)%160-80}px)`;
+}
+
+/* ============ TIMELINE ============ */
+const Q=new URLSearchParams(location.search);
+const DURATION=30;
+const tl=gsap.timeline({paused:true});
+const cam=(at,x,y,s,dur=1,ease='power3.inOut')=>tl.to(C,{x,y,s,duration:dur,ease},at);
+const sweepTo=(at,x,y,dur=2.2)=>tl.to('#sweep',{x,y,duration:dur,ease:'sine.inOut'},at);
+const draw=(p,L,at,dur)=>{tl.set(p,{attr:{'stroke-dasharray':L,'stroke-dashoffset':L},opacity:1},at);
+  tl.to(p,{attr:{'stroke-dashoffset':0},duration:dur,ease:'power2.inOut'},at);};
+const follow=(el,p,L,at,dur,{rev=false,ease='power2.inOut'}={})=>{const o={u:0};
+  tl.fromTo(o,{u:0},{u:1,duration:dur,ease,immediateRender:false,onUpdate(){
+    const pt=p.getPointAtLength((rev?1-o.u:o.u)*L);gsap.set(el,{x:pt.x,y:pt.y});}},at);};
+const moveCursor=(at,x,y,dur=.6)=>tl.to('#cursor',{x,y,duration:dur,ease:'power2.inOut'},at);
+const click=(at,x,y)=>{tl.to('#cursor',{scale:.85,duration:.08,yoyo:true,repeat:1,transformOrigin:'4px 2px'},at);
+  tl.fromTo('#click',{x,y,scale:.3,opacity:.95},{scale:1.5,opacity:0,duration:.45,ease:'power2.out',immediateRender:false},at);};
+/* posisi dunia: titik di layar PC / gambar jendela utama */
+const SX=108,SY=438;
+const mainPt=(ix,iy,k=1,dx=0)=>({x:SX+40+dx+ix*.95*k,y:SY+16+iy*.95*k});
+
+/* pintu teks */
+const inUp=(ch,el,at,{dur=.8,st=.024}={})=>{tl.fromTo(ch,{opacity:0,yPercent:60,scaleY:1.45},{opacity:1,yPercent:0,scaleY:1,duration:dur,ease:'power4.out',stagger:st,immediateRender:false},at);blurTween(tl,el,at,30,0,dur,VERT);};
+const inLeft=(ch,el,at,{dur=.75,st=.02}={})=>{tl.fromTo(ch,{opacity:0,xPercent:-45},{opacity:1,xPercent:0,duration:dur,ease:'power4.out',stagger:st,immediateRender:false},at);blurTween(tl,el,at,50,0,dur,{ease:'power4.out'});};
+const inRight=(ch,el,at,{dur=.75,st=.02}={})=>{tl.fromTo(ch,{opacity:0,xPercent:45},{opacity:1,xPercent:0,duration:dur,ease:'power4.out',stagger:{each:st,from:'end'},immediateRender:false},at);blurTween(tl,el,at,50,0,dur,{ease:'power4.out'});};
+const inDepth=(ch,el,at,{dur=1,st=.018}={})=>{tl.fromTo(ch,{opacity:0,scale:2.4},{opacity:1,scale:1,duration:dur,ease:'expo.out',stagger:{each:st,from:'center'},immediateRender:false},at);blurTween(tl,el,at,22,0,dur,{ease:'expo.out',ax:1,ay:1});};
+const inWords=(ch,el,at,{dur=.6,st=.14}={})=>{const w=el.querySelectorAll('.wd');tl.set(ch,{opacity:1},at);
+  tl.fromTo(w,{opacity:0,yPercent:40,rotateX:-55},{opacity:1,yPercent:0,rotateX:0,duration:dur,ease:'back.out(1.6)',stagger:st,immediateRender:false},at);};
+const inMask=(ch,el,at,{dur=.9}={})=>{tl.set(ch,{opacity:1},at);
+  tl.fromTo(el,{clipPath:'inset(0% 100% 0% 0%)'},{clipPath:'inset(0% 0% 0% 0%)',duration:dur,ease:'power3.inOut',immediateRender:false},at);tl.set(el,{clipPath:'none'},at+dur);};
+const outUp=(ch,el,at,{dur=.4,st=.01}={})=>{tl.to(ch,{opacity:0,yPercent:-70,duration:dur,ease:'power2.in',stagger:st},at);blurTween(tl,el,at,0,45,dur+.1,{ease:'power2.in',...VERT});};
+const outLeft=(ch,el,at,{dur=.4,st=.01}={})=>{tl.to(ch,{opacity:0,xPercent:-60,duration:dur,ease:'power2.in',stagger:st},at);blurTween(tl,el,at,0,55,dur+.1,{ease:'power2.in'});};
+const outRight=(ch,el,at,{dur=.4,st=.01}={})=>{tl.to(ch,{opacity:0,xPercent:60,duration:dur,ease:'power2.in',stagger:{each:st,from:'end'}},at);blurTween(tl,el,at,0,55,dur+.1,{ease:'power2.in'});};
+const outDepth=(ch,el,at,{dur=.5,st=.008}={})=>{tl.to(ch,{opacity:0,scale:2.6,duration:dur,ease:'power2.in',stagger:{each:st,from:'center'}},at);blurTween(tl,el,at,0,30,dur+.1,{ease:'power2.in',ax:1,ay:1});};
+const outDown=(ch,el,at,{dur=.4,st=.01}={})=>{tl.to(ch,{opacity:0,yPercent:70,duration:dur,ease:'power2.in',stagger:st},at);blurTween(tl,el,at,0,45,dur+.1,{ease:'power2.in',...VERT});};
+
+const T={};['t1','t2','t3','t4','t5','t6','title'].forEach(id=>{const el=$('#'+id);T[id]={el,ch:splitChars(el)};});
+const show=(id,at)=>tl.set(T[id].el,{opacity:1},at);
+
+/* ---- keadaan awal ---- */
+tl.set(C,{x:760,y:1300,s:2.35},0);
+tl.set('#sweep',{x:860,y:1300},0);
+tl.set(['#w-main','#w-mirror','#w-file','#folder','#folder-bg','#hero','#doc','#cursor','#click','#dot','#toast'],{opacity:0},0);
+tl.set('#folder-bg',{left:140,top:458,width:420,height:494,borderRadius:12},0);
+tl.set('#folder',{x:0,y:0,scale:1},0);
+tl.set(['#pA','#pB'],{opacity:0,attr:{'stroke-width':10}},0);
+tl.set('#icon',{scale:0},0); tl.set('#xcircle',{attr:{r:1400}},0);
+tl.set(feeds,{y:0},0); tl.set('#cam',{opacity:1},0); tl.set('#snap',{opacity:0,scale:1},0);
+tl.set('#plug',{x:0,y:0,rotation:0,opacity:1,transformOrigin:'760px 1700px'},0);
+tl.set(['#monitor','#neck','#base','#phone'],{opacity:1,scale:1},0);
+tl.set('#ring-bg',{rotation:0},0);
+tl.to('#ring-bg',{rotation:40,duration:DURATION,ease:'none'},0);   // bentuk logo berputar pelan di latar
+
+/* ===== B1 0–2.5 · Jepret ===== */
+tl.fromTo('#vf>div',{x:0},{x:-24,duration:2.4,ease:'sine.inOut',immediateRender:false},0);
+cam(0,760,1330,2.5,2.4,'sine.inOut');
+show('t1',.25); inUp(T.t1.ch,T.t1.el,.3);
+tl.to('#shutter',{scale:.82,duration:.1,yoyo:true,repeat:1},1.0);
+tl.fromTo('#flash',{opacity:0},{opacity:.95,duration:.06,immediateRender:false},1.08);
+tl.to('#flash',{opacity:0,duration:.35,ease:'power2.out'},1.14);
+tl.set('#snap',{opacity:1},1.12);
+tl.to('#snap',{scale:.16,x:-4,borderRadius:40,duration:.6,ease:'power3.in'},1.3);
+tl.set('#snap',{opacity:0},1.9); tl.set('#thumb',{opacity:1},1.88);
+tl.fromTo('#thumb',{scale:1.25},{scale:1,duration:.3,ease:'back.out(3)',immediateRender:false},1.88);
+outUp(T.t1.ch,T.t1.el,2.15);
+sweepTo(0,700,1150,2.5);
+
+/* ===== B2 2.5–7 · Muncul di PC ===== */
+cam(2.45,540,1060,1,1.5,'power3.inOut');
+tl.to('#cam',{opacity:0,duration:.5},2.9);            // HP: dari kamera ke galeri (foto yang sama di kartu pertama)
+sweepTo(2.6,380,620,2.6);
+draw(pA,LA,3.6,1.0);
+tl.set('#dot',{opacity:1},3.6); follow('#dot',pA,LA,3.6,1.0); tl.to('#dot',{opacity:0,duration:.25},4.55);
+tl.fromTo('#w-main',{opacity:0,scale:.82,y:20},{opacity:1,scale:1,y:0,duration:.6,ease:'back.out(1.4)',immediateRender:false},4.3);
+show('t2',4.55); inLeft(T.t2.ch,T.t2.el,4.6);
+{const b=mainPt(168,444);
+ tl.set('#cursor',{x:b.x+120,y:b.y+140,opacity:0},4.5); tl.to('#cursor',{opacity:1,duration:.2},4.6);
+ moveCursor(4.7,b.x,b.y,.6); click(5.35,b.x,b.y);}
+tl.to('#w-main',{x:-40,scale:.85,opacity:.92,duration:.6,ease:'power3.inOut'},5.7);
+tl.fromTo('#w-mirror',{opacity:0,scale:.6},{opacity:1,scale:1,duration:.7,ease:'back.out(1.3)',immediateRender:false},5.75);
+tl.to(pA,{opacity:.5,duration:.6},5.8);
+outLeft(T.t2.ch,T.t2.el,6.75);
+
+/* ===== B3 7–12 · Kontrol ===== */
+cam(6.9,560,780,1.32,1.1);
+sweepTo(7,900,700,3);
+show('t3',7.45); inWords(T.t3.ch,T.t3.el,7.5);
+moveCursor(7.4,780,700,.7);
+tl.to(feeds,{y:-250,duration:1.4,ease:'power2.inOut'},8.2);
+tl.to('#cursor',{y:'-=6',duration:.15,yoyo:true,repeat:5},8.2);
+{const k=SX+520+41+138*.79, ky=SY+14+30+(84+75-250+164)*.79;
+ moveCursor(9.6,k,ky,.4); click(10.05,k,ky);
+ tl.fromTo(rips,{left:138,top:84+75-250+164+250,opacity:.9,scale:.4},{scale:3,opacity:0,duration:.6,ease:'power2.out',immediateRender:false},10.05);}
+tl.to(feeds,{y:-420,duration:1.1,ease:'power2.inOut'},10.6);
+tl.set('#waves',{opacity:1},8.9);
+tl.fromTo('.wv',{opacity:0,x:16},{opacity:1,x:0,duration:.35,stagger:.12,repeat:5,yoyo:true,ease:'sine.inOut',immediateRender:false},8.9);
+tl.to('#waves',{opacity:0,duration:.3},11.6);
+outDepth(T.t3.ch,T.t3.el,11.6);
+
+/* ===== B4 12–18 · Ambil ke PC ===== */
+{const f=mainPt(262,444,.85,-40);
+ cam(11.9,540,690,1.18,.9);
+ moveCursor(11.9,f.x,f.y,.6); click(12.5,f.x,f.y);
+ tl.fromTo('#w-file',{opacity:0,scale:.2},{opacity:1,scale:1,duration:.65,ease:'expo.out',immediateRender:false},12.6);
+ tl.to(['#w-main','#w-mirror'],{opacity:0,duration:.3},12.75);}
+sweepTo(12.2,240,560,2.4);
+tl.to('#sel',{opacity:1,duration:.15},13.3);
+{const g={x:SX+64+85*.84,y:SY+2+94*.84};
+ moveCursor(13.35,SX+64+300,SY+2+182,.35);
+ moveCursor(13.65,g.x,g.y,.35); click(14.0,g.x,g.y);}
+cam(14.05,540,1060,1,.8);
+tl.to('#w-file',{opacity:0,scale:.92,duration:.35},14.25);
+tl.to('#cursor',{opacity:0,duration:.2},14.2);
+tl.fromTo(['#folder-bg','#folder'],{opacity:0,scale:.7},{opacity:1,scale:1,duration:.5,ease:'back.out(1.5)',immediateRender:false},14.45);
+tl.set('#hero',{x:760,y:1250,scale:.4,opacity:0},14.5);
+tl.to('#hero',{opacity:1,scale:1,y:1180,duration:.35,ease:'back.out(2)'},14.55);
+tl.to('#hero',{x:690,y:1085,duration:.25,ease:'power2.in'},14.9);
+tl.to(pA,{opacity:1,duration:.3},14.9);
+follow('#hero',pA,LA,15.15,.75);
+{const s0=SLOT(0);
+ tl.to('#hero',{x:150+s0.x+55,y:470+s0.y+55,scale:110/160,duration:.3,ease:'power2.out'},15.9);}
+tl.set(slots[0],{opacity:0},0); tl.set(slots[0],{opacity:1},16.2); tl.set('#hero',{opacity:0},16.2);
+tl.fromTo('#folder-bg',{boxShadow:'0 0 0 0 rgba(236,200,110,.9)'},{boxShadow:'0 0 0 30px rgba(236,200,110,0)',duration:.5,immediateRender:false},16.2);
+/* folder mekar → latar krem */
+tl.to('#folder-bg',{left:-60,top:-40,width:1200,height:2200,borderRadius:0,duration:.8,ease:'power3.inOut'},16.35);
+tl.to('#folder',{x:540-350,y:1150-705,scale:1.7,duration:.8,ease:'power3.inOut'},16.35);
+tl.to(pA,{opacity:0,duration:.3},16.35);
+show('t4',16.85); inDepth(T.t4.ch,T.t4.el,16.9);
+sweepTo(16.4,540,300,2);
+outDown(T.t4.ch,T.t4.el,17.75);
+
+/* ===== B5 18–22 · Kirim ke HP ===== */
+{const d4={x:540,y:1150+24*1.7};
+ tl.set('#doc',{x:d4.x,y:d4.y,scale:1.7,opacity:1},18.05); tl.set(slots[4],{opacity:0},18.05);
+ tl.set('#cursor',{x:d4.x+20,y:d4.y+20,scale:1},18.0); tl.to('#cursor',{opacity:1,duration:.2},18.0);
+ tl.to('#cursor',{scale:.85,duration:.1,transformOrigin:'4px 2px'},18.25);
+ tl.to('#doc',{scale:2,rotation:-6,duration:.25,ease:'back.out(2)'},18.25);
+ tl.to('#folder-bg',{left:140,top:458,width:420,height:494,borderRadius:12,duration:.8,ease:'power3.inOut'},18.45);
+ tl.to('#folder',{x:0,y:0,scale:1,duration:.8,ease:'power3.inOut'},18.45);
+ tl.to('#doc',{x:380,y:820,scale:.9,rotation:0,duration:.8,ease:'power3.inOut'},18.45);
+ tl.to('#cursor',{x:400,y:840,duration:.8,ease:'power3.inOut'},18.45);
+ tl.to('#cursor',{opacity:0,scale:1,duration:.2},19.3);}
+sweepTo(18.5,900,1500,2.4);
+draw(pB,LB,19.3,.7);
+show('t5',19.35); inRight(T.t5.ch,T.t5.el,19.4);
+follow('#doc',pB,LB,19.55,1.05);
+tl.to('#doc',{scale:.25,opacity:0,y:'+=110',duration:.3,ease:'power2.in'},20.6);
+tl.fromTo('#toast',{opacity:0,y:-30},{opacity:1,y:0,duration:.4,ease:'back.out(2)',immediateRender:false},20.8);
+tl.to(pB,{opacity:.5,duration:.5},20.7);
+tl.to(['#folder','#folder-bg'],{opacity:0,scale:.9,duration:.45,ease:'power2.in'},20.9);   // kantong teks babak 6 bersih
+outRight(T.t5.ch,T.t5.el,21.55);
+
+/* ===== B6 22–25 · Tanpa kabel ===== */
+cam(21.8,700,1290,1.32,.9);
+sweepTo(21.9,700,1700,2.4);
+show('t6',22.35); inMask(T.t6.ch,T.t6.el,22.4);
+tl.to('#plug',{y:340,rotation:10,duration:.7,ease:'power2.in'},22.6);
+tl.to('#plug',{opacity:0,duration:.3},23.1);
+tl.to('#toast',{opacity:0,duration:.3},22.4);
+tl.set('#wifi',{opacity:1},22.95);
+tl.fromTo('.wf',{opacity:0},{opacity:1,duration:.25,stagger:.15,immediateRender:false},23.0);
+tl.to('.wf',{opacity:.25,duration:.3,stagger:.15,yoyo:true,repeat:3},23.6);
+tl.to('#wifi',{opacity:0,duration:.35},24.6);
+tl.to(feeds,{y:-600,duration:1.6,ease:'power2.inOut'},23.0);
+outUp(T.t6.ch,T.t6.el,24.55);
+
+/* ===== B7 25–30 · Dua jalur jadi X ===== */
+cam(24.85,540,1300,1,1);
+tl.to(['#monitor','#neck','#base','#phone','#folder','#folder-bg'],{opacity:0,scale:.88,duration:.6,ease:'power2.in',transformOrigin:'50% 50%'},25.0);
+tl.set([pA,pB],{attr:{'stroke-dasharray':'none'}},25.1);
+tl.to([pA,pB],{opacity:1,duration:.3},25.1);
+tl.to(pA,{attr:{d:'M800 1410 C627 1237 453 1063 280 890','stroke-width':72},duration:1.2,ease:'power3.inOut'},25.3);
+tl.to(pB,{attr:{d:'M800 890 C627 1063 453 1237 280 1410','stroke-width':72},duration:1.2,ease:'power3.inOut'},25.3);
+tl.to('#icon',{scale:1,duration:.8,ease:'back.out(1.3)'},26.2);
+tl.to('#xcircle',{attr:{r:249},duration:.8,ease:'power3.inOut'},26.2);
+sweepTo(25.2,540,820,1.6);
+show('title',27.0); inMask(T.title.ch,T.title.el,27.05,{dur:.8});
+tl.fromTo('#sub',{opacity:0,y:30},{opacity:1,y:0,duration:.6,ease:'power3.out',immediateRender:false},27.6);
+tl.fromTo('#icon',{rotation:0},{rotation:4,duration:3,ease:'sine.inOut',immediateRender:false},27);
+tl.to({},{duration:.01},DURATION);
+
+/* ============ PEREKAT ============ */
+const stage=$('#stage');
+const fit=()=>{const s=Math.min(innerWidth/W,innerHeight/H);stage.style.transform=`translate(-50%,-50%) scale(${s})`;};
+addEventListener('resize',fit); fit();
+const clock=$('#clock'),scrub=$('#scrub'),btn=$('#btn-play'); let scrubbing=false;
+(function frame(){const t=tl.time();render(t);clock.textContent=t.toFixed(2)+'s';
+  if(!scrubbing)scrub.value=String(t/DURATION*1000);requestAnimationFrame(frame);})();
+const toggle=()=>{if(tl.paused()||tl.progress()>=1){if(tl.progress()>=1)tl.progress(0);tl.play();btn.textContent='Pause';}
+  else{tl.pause();btn.textContent='Play';}};
+btn.onclick=toggle;
+$('#btn-restart').onclick=()=>{tl.pause(0);tl.play();btn.textContent='Pause';};
+scrub.addEventListener('pointerdown',()=>{scrubbing=true;tl.pause();btn.textContent='Play';});
+addEventListener('pointerup',()=>scrubbing=false);
+scrub.addEventListener('input',()=>{tl.pause();tl.time(scrub.value/1000*DURATION);});
+addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();toggle();}
+  if(/^[rR]$/.test(e.key)){tl.pause(0);tl.play();}
+  if(/^[hH]$/.test(e.key))$('#ui').classList.toggle('on');});
+if(Q.has('debug'))$('#ui').classList.add('on');
+tl.eventCallback('onComplete',()=>{tl.play(0);});
+const seek=t=>{tl.pause();tl.time(t,false);if(gsap.ticker.tick)gsap.ticker.tick();render(t);};
+window.OPENER={tl,DURATION,seek,W,H,ready:false};
+Promise.all([document.fonts.ready,...[...document.images].map(i=>i.complete?1:new Promise(r=>{i.onload=i.onerror=r;}))])
+  .then(()=>{window.OPENER.ready=true;tl.time(0);render(0);if(!Q.has('clean'))tl.play(0);});
+</script>
+</body>
+</html>
